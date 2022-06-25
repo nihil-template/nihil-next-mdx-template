@@ -1,0 +1,64 @@
+{
+  "name": "nihil-next-mdx-template",
+  "version": "1.0.0",
+  "description": "NextJS에서 MDX를 편하게 쓰려고 만든 템플릿.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nihil-template/nihil-next-mdx-template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nihil-template/nihil-next-mdx-template/issues"
+  },
+  "homepage": "https://github.com/nihil-template/nihil-next-mdx-template#readme",
+  "scripts": {
+    "remove": "rm -rf node_modules/.cache && rm -rf build/",
+    "serve": "yarn run remove && next dev",
+    "start": "yarn run remove && next build && next start",
+    "build": "yarn run remove && next build",
+    "backupgit": "cp -r ../io/.git ../backup",
+    "restoregit": "cp -r ../backup/.git ../io && rm -rf ../backup/.git",
+    "export": "yarn run backupgit && yarn run remove && next build && next export -o ../io/ && touch ../io/.nojekyll && yarn run restoregit && cd ../io && git add .",
+    "clean": "yarn cache clean"
+  },
+  "keywords": [],
+  "author": "NIHILncunia",
+  "license": "MIT",
+  "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@reduxjs/toolkit": "^1.8.2",
+    "gray-matter": "^4.0.3",
+    "highlight.js": "^11.5.1",
+    "marked": "^4.0.17",
+    "next": "^12.1.6",
+    "next-mdx-remote": "^4.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.2",
+    "redux": "^4.2.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.5",
+    "@emotion/babel-plugin": "^11.9.2",
+    "@emotion/babel-preset-css-prop": "^11.2.0",
+    "@types/marked": "^4.0.3",
+    "@types/node": "^18.0.0",
+    "@types/react": "^18.0.14",
+    "@types/react-dom": "^18.0.5",
+    "@types/react-redux": "^7.1.24",
+    "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "eslint": "^8.18.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-next": "^12.1.6",
+    "eslint-plugin-html": "^6.2.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "typescript": "^4.7.4"
+  }
+}
