@@ -1,0 +1,21 @@
+PATCH http://localhost:3000/api/posts/ebc9fceb-5167-429c-8a41-f915cb1d2735
+Content-Type: application/json
+
+{
+  "id": "ebc9fceb-5167-429c-8a41-f915cb1d2735",
+  "postData": {
+    "title": "test2"
+  }
+}
+
+###
+POST http://localhost:3000/api/posts
+Content-Type: application/json
+
+{
+  "title": "title1",
+  "description": "desc1"
+}
+
+###
+GET http://localhost:3000/api/posts
