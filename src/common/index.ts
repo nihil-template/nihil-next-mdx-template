@@ -15,6 +15,8 @@ export { keysData } from './data/keys.data';
 
 // hooks
 export { useInput } from './hooks/useInput';
+export { useContent } from './hooks/useContent';
+
 export { useGetPosts } from './hooks/query/useGetPosts';
 export { useGetPostById } from './hooks/query/useGetPostById';
 export { useCreatePost } from './hooks/query/useCreatePost';

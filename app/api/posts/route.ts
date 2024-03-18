@@ -5,7 +5,11 @@ import { ICreatePost } from '@/src/entities';
 const post = Db.post();
 
 export async function GET() {
-  const posts = await post.findMany();
+  const posts = await post.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
 
   return NextResponse.json({
     data: posts,

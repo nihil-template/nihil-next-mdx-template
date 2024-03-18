@@ -7,3 +7,5 @@ export { TextItem } from './block/TextItem';
 
 export { PostList } from './posts/PostList';
 export { PostDetail } from './posts/PostDetail';
+
+export { HomePage } from './home/HomePage';

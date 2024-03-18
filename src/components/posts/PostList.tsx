@@ -158,19 +158,8 @@ export function PostList({ styles, }: Props) {
 
       <Board width='w-[900px]'>
         <BoardHeader />
-        <BoardList />
+        <BoardList data={posts.data} />
       </Board>
-
-      <div className={css.default}>
-        {posts.data.map((post) => (
-          <div key={post.id}>
-            <Link href={`/posts/${post.id}`}>
-              <h2>{post.title}</h2>
-            </Link>
-            <div>{post.description}</div>
-          </div>
-        ))}
-      </div>
     </>
   );
 }

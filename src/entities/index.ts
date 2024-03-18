@@ -12,8 +12,6 @@ export {
   type MessageBlockItem
 } from './editor/editor.types';
 
-export { useEditStore } from './editor/editor.store';
-
 export {
   type ICreatePost,
   type IPatchPost

@@ -35,7 +35,10 @@ export async function PATCH(req: NextRequest, { params: { id, }, }: Params) {
     data: postData,
   });
 
-  return NextResponse.json(patchPost, {
+  return NextResponse.json({
+    data: patchPost,
+    message: 'ok',
+  }, {
     status: 200,
   });
 }

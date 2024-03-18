@@ -2,18 +2,18 @@
 
 import React from 'react';
 import { ClassNameValue, twJoin } from 'tailwind-merge';
+import { Post } from '@prisma/client';
 import { BlockItem, TextBlockItem } from '@/src/entities';
 import { TextItem } from '@/src/components';
 
 interface Props {
   block: BlockItem
+  content: BlockItem[];
   styles?: ClassNameValue;
 }
 
-export function Item({ block, styles, }: Props) {
+export function Item({ block, content, styles, }: Props) {
   const { name, postId, } = block;
-
-  console.log(block);
 
   const css = {
     default: twJoin([
@@ -25,7 +25,7 @@ export function Item({ block, styles, }: Props) {
   return (
     <>
       {name === 'TEXT' && (
-        <TextItem block={block as TextBlockItem} />
+        <TextItem block={block as TextBlockItem} content={content} />
       )}
     </>
   );

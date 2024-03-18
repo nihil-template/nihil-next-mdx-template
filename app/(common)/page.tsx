@@ -1,6 +1,6 @@
 import React from 'react';
 import { setMeta } from '@/src/common';
-import { PostEditor } from '@/src/components';
+import { HomePage } from '@/src/components';
 
 export const metadata = setMeta({
   title: '홈',
@@ -10,7 +10,7 @@ export const metadata = setMeta({
 export default function IndexPage() {
   return (
     <>
-      <div />
+      <HomePage />
     </>
   );
 }

@@ -13,7 +13,7 @@ export function BoardHeader({ styles, }
 Props) {
   const css = {
     default: twJoin([
-      `flex flex-row divide-x divide-black-100`,
+      `flex flex-row divide-x divide-black-100 border-b border-black-100`,
       styles,
     ]),
   };

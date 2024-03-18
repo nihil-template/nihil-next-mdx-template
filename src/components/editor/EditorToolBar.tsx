@@ -3,68 +3,132 @@
 import React, { useCallback } from 'react';
 import { ClassNameValue, twJoin } from 'tailwind-merge';
 import { Icon } from '@iconify/react';
-import { TextBlockItem, useEditStore } from '@/src/entities';
-import { Nihil } from '@/src/common';
+import { Post } from '@prisma/client';
+import { useQueryClient } from '@tanstack/react-query';
+import { TextBlockItem } from '@/src/entities';
+import {
+  ApiResponse, Nihil, useContent, useUpdatePost
+} from '@/src/common';
+import { Button } from '@/src/shadcn';
 
 interface Props {
-  postId: string;
+  post: Post;
   styles?: ClassNameValue;
 }
 
-export function EditorToolBar({ postId, styles, }: Props) {
-  const { postContent, addBlock, } = useEditStore(
-    useCallback((state) => state, [])
-  );
+export function EditorToolBar({ post, styles, }: Props) {
+  console.log('post >> ', post);
+  const content = useContent(post);
 
-  const onClickAddText = () => {
-    addBlock({
-      id: Nihil.uuid(),
-      postId,
-      name: 'TEXT',
-      text: '',
-    } as TextBlockItem);
-  };
+  const qc = useQueryClient();
+
+  const updatePost = useUpdatePost(post.id);
+
+  const onClickAddText = useCallback(
+    () => {
+      const copyPost = { ...post, };
+      content.push({
+        id: Nihil.uuid(),
+        postId: post.id,
+        name: 'TEXT',
+        text: '',
+      } as TextBlockItem);
+
+      copyPost.content = Nihil.string(content);
+
+      updatePost.mutate({
+        content: Nihil.string(content),
+      }, {
+        onSuccess({ data: post, }) {
+          qc.setQueryData(
+            [ 'getPostById', post.id, ],
+            (oldPost: ApiResponse<Post>) => (
+              { ...oldPost, data: post, }
+            )
+          );
+        },
+      });
+    },
+    [ post, content, qc, ]
+  );
 
   const css = {
     default: twJoin([
-      ``,
+      `p-2 rounded-2 bg-black-100`,
       styles,
+    ]),
+    button: twJoin([
+      `bg-black-200 hover:bg-white text-black-base text-[18px]`,
     ]),
   };
 
   return (
     <>
       <div className={css.default}>
-        <button aria-label='add heading'>
+        <Button
+          size='sm'
+          aria-label='add heading'
+          className={css.button}
+        >
           <Icon icon='gravity-ui:heading' />
-        </button>
-        <button
+        </Button>
+        <Button
+          size='sm'
           aria-label='add text'
+          className={css.button}
           onClick={onClickAddText}
         >
           <Icon icon='mdi:format-text' />
-        </button>
-        <button aria-label='add image'>
+        </Button>
+        <Button
+          size='sm'
+          aria-label='add image'
+          className={css.button}
+        >
           <Icon icon='mdi:file-image' />
-        </button>
-        <button aria-label='add ordered list'>
+        </Button>
+        <Button
+          size='sm'
+          aria-label='add ordered list'
+          className={css.button}
+        >
           <Icon icon='mdi:format-list-bulleted' />
-        </button>
-        <button aria-label='add unordered list'>
+        </Button>
+        <Button
+          size='sm'
+          aria-label='add unordered list'
+          className={css.button}
+        >
           <Icon icon='mdi:format-list-numbered' />
-        </button>
-        <button aria-label='add message'>
+        </Button>
+        <Button
+          size='sm'
+          aria-label='add message'
+          className={css.button}
+        >
           <Icon icon='ant-design:message-filled' />
-        </button>
-        <button aria-label='add quote'>
+        </Button>
+        <Button
+          size='sm'
+          aria-label='add quote'
+          className={css.button}
+        >
           <Icon icon='mdi:format-quote-open' />
-        </button>
-        <button aria-label='add codeblock'>
+        </Button>
+        <Button
+          size='sm'
+          aria-label='add codeblock'
+          className={css.button}
+        >
           <Icon icon='mdi:code' />
-        </button>
-        <button aria-label='add youtube video'>
+        </Button>
+        <Button
+          size='sm'
+          aria-label='add youtube video'
+          className={css.button}
+        >
           <Icon icon='mdi:youtube' />
-        </button>
+        </Button>
       </div>
     </>
   );
