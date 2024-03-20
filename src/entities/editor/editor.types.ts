@@ -9,7 +9,7 @@ export interface TextBlockItem extends BlockItem {
 }
 
 export interface HeadingBlockItem extends BlockItem {
-  level: number;
+  level: ('h2' | 'h3' | 'h4' | 'h5' | 'h6');
   text: string;
 }
 

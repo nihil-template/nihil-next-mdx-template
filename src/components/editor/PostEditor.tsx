@@ -37,8 +37,11 @@ export function PostEditor({ styles, }: Props) {
 
   const css = {
     default: twJoin([
-      ``,
+      `w-full mo-sm:w-full mo-md:max-w-[900px] mo-lg:max-w-[900px] mx-auto`,
       styles,
+    ]),
+    topButton: twJoin([
+      `w-full mo-sm:w-full mo-md:max-w-[900px] mo-lg:max-w-[900px] mx-auto text-right mb-2`,
     ]),
   };
 
@@ -52,8 +55,8 @@ export function PostEditor({ styles, }: Props) {
 
   return (
     <>
-      <div>
-        <Button onClick={onClickDetail}>포스트로 돌아가기</Button>
+      <div className={css.topButton}>
+        <Button size='sm' onClick={onClickDetail}>포스트로 돌아가기</Button>
       </div>
 
       <div className={css.default}>

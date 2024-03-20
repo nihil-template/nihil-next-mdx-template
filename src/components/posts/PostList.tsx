@@ -103,8 +103,6 @@ export function PostList({ styles, }: Props) {
     ]),
   };
 
-  console.log('open >> ', open);
-
   if (isLoading || isFetching) {
     return (
       <div>로딩중</div>

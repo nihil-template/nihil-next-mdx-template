@@ -17,7 +17,7 @@ export function HomePage({ styles, }: Props) {
       queryKey: [ 'getPosts', ],
       queryFn: getPosts,
     });
-  }, []);
+  }, [ qc, ]);
 
   const css = {
     default: twJoin([

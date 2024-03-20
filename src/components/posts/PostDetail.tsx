@@ -7,6 +7,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useGetPostById } from '@/src/common';
 import { Button } from '@/src/shadcn';
 import { getPosts } from '@/src/features';
+import { ContentDetail } from '@/src/components';
 
 interface Props {
   styles?: ClassNameValue;
@@ -78,9 +79,7 @@ export function PostDetail({ styles, }: Props) {
         <div id='title'>{post.data.title}</div>
         <div id='description'>{post.data.description}</div>
 
-        <div>
-          {post.data.content}
-        </div>
+        <ContentDetail post={post.data} />
       </div>
     </>
   );

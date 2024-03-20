@@ -1,15 +1,14 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import { ClassNameValue, twJoin } from 'tailwind-merge';
 import { Icon } from '@iconify/react';
 import { Post } from '@prisma/client';
-import { useQueryClient } from '@tanstack/react-query';
-import { TextBlockItem } from '@/src/entities';
 import {
-  ApiResponse, Nihil, useContent, useUpdatePost
+  useContent
 } from '@/src/common';
 import { Button } from '@/src/shadcn';
+import { AddHeadingButton, AddTextButton } from '@/src/components';
 
 interface Props {
   post: Post;
@@ -17,44 +16,11 @@ interface Props {
 }
 
 export function EditorToolBar({ post, styles, }: Props) {
-  console.log('post >> ', post);
   const content = useContent(post);
-
-  const qc = useQueryClient();
-
-  const updatePost = useUpdatePost(post.id);
-
-  const onClickAddText = useCallback(
-    () => {
-      const copyPost = { ...post, };
-      content.push({
-        id: Nihil.uuid(),
-        postId: post.id,
-        name: 'TEXT',
-        text: '',
-      } as TextBlockItem);
-
-      copyPost.content = Nihil.string(content);
-
-      updatePost.mutate({
-        content: Nihil.string(content),
-      }, {
-        onSuccess({ data: post, }) {
-          qc.setQueryData(
-            [ 'getPostById', post.id, ],
-            (oldPost: ApiResponse<Post>) => (
-              { ...oldPost, data: post, }
-            )
-          );
-        },
-      });
-    },
-    [ post, content, qc, ]
-  );
 
   const css = {
     default: twJoin([
-      `p-2 rounded-2 bg-black-100`,
+      `p-2 rounded-2 bg-black-100 flex gap-1`,
       styles,
     ]),
     button: twJoin([
@@ -65,21 +31,8 @@ export function EditorToolBar({ post, styles, }: Props) {
   return (
     <>
       <div className={css.default}>
-        <Button
-          size='sm'
-          aria-label='add heading'
-          className={css.button}
-        >
-          <Icon icon='gravity-ui:heading' />
-        </Button>
-        <Button
-          size='sm'
-          aria-label='add text'
-          className={css.button}
-          onClick={onClickAddText}
-        >
-          <Icon icon='mdi:format-text' />
-        </Button>
+        <AddHeadingButton post={post} content={content} styles={css.button} />
+        <AddTextButton post={post} content={content} styles={css.button} />
         <Button
           size='sm'
           aria-label='add image'

@@ -1,11 +1,15 @@
 'use client';
 
-import React, { ChangeEvent, useCallback, useState } from 'react';
+import React, {
+  useCallback, useMemo
+} from 'react';
 import { ClassNameValue, twJoin } from 'tailwind-merge';
 import { useQueryClient } from '@tanstack/react-query';
 import { Post } from '@prisma/client';
 import { BlockItem, TextBlockItem } from '@/src/entities';
-import { ApiResponse, Nihil, useUpdatePost } from '@/src/common';
+import {
+  ApiResponse, Nihil, useInput, useUpdatePost
+} from '@/src/common';
 
 interface Props {
   block: TextBlockItem;
@@ -14,26 +18,27 @@ interface Props {
 }
 
 export function TextItem({ block, content, styles, }: Props) {
-  const [ text, setText, ] = useState(block.text);
-  const [ restoreBlock, ] = useState(block);
+  const originBlock = useMemo(() => {
+    return block;
+  }, []);
 
-  const qc = useQueryClient();
+  const text = useInput<HTMLTextAreaElement>({
+    id: 'text',
+    initValue: block.text,
+  });
 
-  const updatePost = useUpdatePost(block.postId);
-
-  const onChangeText = useCallback(
-    (event: ChangeEvent<HTMLTextAreaElement>) => {
-      setText(event.target.value);
+  const restoreText = useCallback(
+    () => {
+      text.setState(originBlock.text);
     },
     []
   );
 
-  const restoreText = useCallback(
-    () => {
-      setText(restoreBlock.text);
-    },
-    [ restoreBlock, ]
-  );
+  console.log('text >> ', text.data.value);
+
+  const qc = useQueryClient();
+
+  const updatePost = useUpdatePost(block.postId);
 
   const saveText = useCallback(
     () => {
@@ -41,7 +46,7 @@ export function TextItem({ block, content, styles, }: Props) {
         (item) => item.id === block.id
       ) as TextBlockItem;
 
-      findBlock.text = text;
+      findBlock.text = text.data.value;
 
       updatePost.mutate({
         content: Nihil.string(content),
@@ -66,7 +71,7 @@ export function TextItem({ block, content, styles, }: Props) {
       ) as TextBlockItem;
 
       findBlock.text = '';
-      setText('');
+      text.setState('');
     },
     []
   );
@@ -84,8 +89,7 @@ export function TextItem({ block, content, styles, }: Props) {
         <div>여기에 메뉴</div>
         <div>
           <textarea
-            value={text}
-            onChange={onChangeText}
+            {...text.data}
           />
         </div>
         <div>
