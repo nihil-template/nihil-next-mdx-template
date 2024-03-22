@@ -3,7 +3,9 @@ export { PostEditor } from './editor/PostEditor';
 export { EditorContent } from './editor/EditorContent';
 export { AddTextButton } from './editor/AddTextButton';
 export { AddHeadingButton } from './editor/AddHeadingButton';
+export { AddImageButton } from './editor/AddImageButton';
 
+export { ItemManageMenu } from './edit-block/ItemManageMenu';
 export { Item } from './edit-block/Item';
 export { TextItem } from './edit-block/TextItem';
 export { HeadingItem } from './edit-block/HeadingItem';

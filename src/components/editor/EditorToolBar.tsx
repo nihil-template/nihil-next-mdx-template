@@ -8,7 +8,7 @@ import {
   useContent
 } from '@/src/common';
 import { Button } from '@/src/shadcn';
-import { AddHeadingButton, AddTextButton } from '@/src/components';
+import { AddHeadingButton, AddImageButton, AddTextButton } from '@/src/components';
 
 interface Props {
   post: Post;
@@ -33,13 +33,7 @@ export function EditorToolBar({ post, styles, }: Props) {
       <div className={css.default}>
         <AddHeadingButton post={post} content={content} styles={css.button} />
         <AddTextButton post={post} content={content} styles={css.button} />
-        <Button
-          size='sm'
-          aria-label='add image'
-          className={css.button}
-        >
-          <Icon icon='mdi:file-image' />
-        </Button>
+        <AddImageButton post={post} content={content} styles={css.button} />
         <Button
           size='sm'
           aria-label='add ordered list'

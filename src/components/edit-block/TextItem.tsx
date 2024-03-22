@@ -10,6 +10,7 @@ import { BlockItem, TextBlockItem } from '@/src/entities';
 import {
   ApiResponse, Nihil, useInput, useUpdatePost
 } from '@/src/common';
+import { ItemManageMenu } from '@/src/components';
 
 interface Props {
   block: TextBlockItem;
@@ -33,8 +34,6 @@ export function TextItem({ block, content, styles, }: Props) {
     },
     []
   );
-
-  console.log('text >> ', text.data.value);
 
   const qc = useQueryClient();
 
@@ -86,9 +85,13 @@ export function TextItem({ block, content, styles, }: Props) {
   return (
     <>
       <div className={css.default}>
-        <div>여기에 메뉴</div>
+        <div>
+          menu
+          <ItemManageMenu block={block} content={content} />
+        </div>
         <div>
           <textarea
+            autoComplete='off'
             {...text.data}
           />
         </div>

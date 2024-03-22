@@ -54,4 +54,3 @@ export * from './ui/tooltip';
 
 // nihil
 export { Message } from './nihil/message';
-export * from './nihil/board';

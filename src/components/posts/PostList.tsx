@@ -9,7 +9,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
 import {
-  Board, BoardHeader, BoardList,
   Button,
   Dialog,
   DialogContent,
@@ -17,9 +16,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Form, FormField, FormItem, FormLabel,
   Input,
   Label,
-  Message
+  Message, Textarea
 } from '@/src/shadcn';
 import {
   keysData, Nihil, useCreatePost, useGetPosts
@@ -42,23 +42,17 @@ export function PostList({ styles, }: Props) {
     description: string().required('설명을 입력해야합니다.'),
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, },
-    // watch,
-    reset,
-  } = useForm({
+  const form = useForm({
     mode: 'all',
     resolver: yupResolver(createPostSchema),
   });
+
+  const { formState: { errors, }, } = form;
 
   const {
     data: posts,
     isLoading,
     isFetching,
-    // isError,
-    // error,
   } = useGetPosts();
 
   const {
@@ -79,7 +73,7 @@ export function PostList({ styles, }: Props) {
             queryKey: keysData.post.getAll,
           });
 
-          reset({
+          form.reset({
             title: '',
             description: '',
           });
@@ -111,8 +105,6 @@ export function PostList({ styles, }: Props) {
 
   return (
     <>
-      <button onClick={() => toast.info('test')}>테스트</button>
-
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button size='sm' className='bg-blue-500 hover:bg-blue-600'>글 작성하기</Button>
@@ -122,42 +114,52 @@ export function PostList({ styles, }: Props) {
             <DialogTitle>게시글 작성</DialogTitle>
             <DialogDescription>작성할 글의 정보를 입력해주세요.</DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit(onCreatePost)}>
-            <div className='mb-2'>
-              <Label htmlFor='title'>제목</Label>
-              <Input
-                id='title'
-                type='text'
-                placeholder='제목을 입력해주세요.'
-                {...register('title')}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onCreatePost)}>
+              <FormField
+                control={form.control}
+                render={() => (
+                  <FormItem>
+                    <FormLabel htmlFor='title'>제목</FormLabel>
+                    <Input
+                      id='title'
+                      type='text'
+                      placeholder='제목을 입력해주세요.'
+                      autoComplete='off'
+                      {...form.register('title')}
+                    />
+                    {errors.title && (
+                      <Message color='red'>{errors.title.message}</Message>
+                    )}
+                  </FormItem>
+                )}
+                name='title'
               />
-              {errors.title && (
-                <Message color='red'>{errors.title.message}</Message>
-              )}
-            </div>
-            <div className='mb-2'>
-              <Label htmlFor='description'>설명</Label>
-              <Input
-                id='description'
-                type='text'
-                placeholder='설명을 입력해주세요.'
-                {...register('description')}
+              <FormField
+                control={form.control}
+                render={() => (
+                  <FormItem>
+                    <FormLabel htmlFor='description'>설명</FormLabel>
+                    <Textarea
+                      id='description'
+                      placeholder='설명을 입력해주세요.'
+                      autoComplete='off'
+                      {...form.register('description')}
+                    />
+                    {errors.description && (
+                      <Message color='red'>{errors.description.message}</Message>
+                    )}
+                  </FormItem>
+                )}
+                name='description'
               />
-              {errors.description && (
-                <Message color='red'>{errors.description.message}</Message>
-              )}
-            </div>
-            <div className='text-right'>
-              <Button type='submit'>생성</Button>
-            </div>
-          </form>
+              <div className='text-right mt-2'>
+                <Button type='submit'>생성</Button>
+              </div>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
-
-      <Board width='w-[900px]'>
-        <BoardHeader />
-        <BoardList data={posts.data} />
-      </Board>
     </>
   );
 }

@@ -1,13 +1,24 @@
 'use client';
 
-import React, { useCallback, useMemo } from 'react';
+import React, {
+  ChangeEvent, useCallback, useMemo, useState
+} from 'react';
 import { ClassNameValue, twJoin } from 'tailwind-merge';
 import { useQueryClient } from '@tanstack/react-query';
 import { Post } from '@prisma/client';
+import { object, string } from 'yup';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { BlockItem, HeadingBlockItem } from '@/src/entities';
 import {
   ApiResponse, Nihil, useInput, useUpdatePost
 } from '@/src/common';
+import { ItemManageMenu } from '@/src/components';
+import {
+  Button,
+  Form, FormField, FormItem, FormLabel, Input,
+  Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue
+} from '@/src/shadcn';
 
 interface Props {
   block: HeadingBlockItem;
@@ -15,7 +26,22 @@ interface Props {
   styles?: ClassNameValue;
 }
 
+interface Inputs {
+  level: string;
+  text: string;
+}
+
 export function HeadingItem({ block, content, styles, }: Props) {
+  const model = object({
+    level: string().required(),
+    text: string().required(),
+  });
+
+  const form = useForm({
+    mode: 'all',
+    resolver: yupResolver(model),
+  });
+
   const originBlock = useMemo(() => {
     return block;
   }, []);
@@ -45,19 +71,19 @@ export function HeadingItem({ block, content, styles, }: Props) {
   const resetBlock = useCallback(
     () => {
       text.setState('');
-      level.setState('none');
+      level.setState('h2');
     },
     []
   );
 
-  const saveBlock = useCallback(
-    () => {
+  const saveBlock: SubmitHandler<Inputs> = useCallback(
+    (data) => {
       const findBlock = content.find(
         (item) => item.id === block.id
       ) as HeadingBlockItem;
 
-      findBlock.level = level.data.value as ('h2' | 'h3' | 'h4' | 'h5' | 'h6');
-      findBlock.text = text.data.value;
+      findBlock.level = data.level as ('h2' | 'h3' | 'h4' | 'h5' | 'h6');
+      findBlock.text = data.text;
 
       updatePost.mutate({
         content: Nihil.string(content),
@@ -92,29 +118,55 @@ export function HeadingItem({ block, content, styles, }: Props) {
     <>
       <div className={css.default}>
         <div>
-          <select
-            {...level.data}
-            className={css.select}
-          >
-            <option value='none'>--선택하세요--</option>
-            <option value='h2'>H2</option>
-            <option value='h3'>H3</option>
-            <option value='h4'>H4</option>
-            <option value='h5'>H5</option>
-            <option value='h6'>H6</option>
-          </select>
+          menu
+          <ItemManageMenu block={block} content={content} />
         </div>
-        <div>
-          <textarea
-            {...text.data}
-            className={css.text}
-          />
-        </div>
-        <div>
-          <button onClick={restoreBlock}>되돌리기</button>
-          <button onClick={saveBlock}>저장</button>
-          <button onClick={resetBlock}>비우기</button>
-        </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(saveBlock)}>
+            <FormField
+              control={form.control}
+              name='level'
+              render={({ field, }) => (
+                <FormItem>
+                  <FormLabel>단계</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder='제목의 단계를 선택하세요.' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value='h2'>H2</SelectItem>
+                        <SelectItem value='h3'>H3</SelectItem>
+                        <SelectItem value='h4'>H4</SelectItem>
+                        <SelectItem value='h5'>H5</SelectItem>
+                        <SelectItem value='h6'>H6</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='text'
+              render={({ field, }) => (
+                <FormItem>
+                  <FormLabel>내용</FormLabel>
+                  <Input
+                    type='text'
+                    onChange={field.onChange}
+                    value={field.value}
+                  />
+                </FormItem>
+              )}
+            />
+            <div>
+              <button onClick={restoreBlock}>되돌리기</button>
+              <Button size='sm' type='submit'>저장</Button>
+              <button onClick={resetBlock}>비우기</button>
+            </div>
+          </form>
+        </Form>
       </div>
     </>
   );
