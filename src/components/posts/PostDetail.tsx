@@ -26,8 +26,6 @@ export function PostDetail({ styles, }: Props) {
     data: post,
     isLoading,
     isFetching,
-    isError,
-    error,
   } = useGetPostById(params.id);
 
   const router = useRouter();
@@ -71,8 +69,8 @@ export function PostDetail({ styles, }: Props) {
   return (
     <>
       <div>
-        <Button onClick={onClickList}>목록</Button>
-        <Button onClick={onClickEdit}>수정</Button>
+        <Button size='sm' onClick={onClickList}>목록</Button>
+        <Button size='sm' onClick={onClickEdit}>수정</Button>
       </div>
 
       <div className={css.default}>

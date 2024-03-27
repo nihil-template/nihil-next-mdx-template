@@ -2,13 +2,14 @@
 
 import React from 'react';
 import { ClassNameValue, twJoin } from 'tailwind-merge';
-import { Icon } from '@iconify/react';
 import { Post } from '@prisma/client';
 import {
   useContent
 } from '@/src/common';
-import { Button } from '@/src/shadcn';
-import { AddHeadingButton, AddImageButton, AddTextButton } from '@/src/components';
+import {
+  AddCodeButton,
+  AddHeadingButton, AddImageButton, AddListButton, AddMessageButton, AddQuoteButton, AddTextButton, AddYoutubeButton
+} from '@/src/components';
 
 interface Props {
   post: Post;
@@ -34,48 +35,12 @@ export function EditorToolBar({ post, styles, }: Props) {
         <AddHeadingButton post={post} content={content} styles={css.button} />
         <AddTextButton post={post} content={content} styles={css.button} />
         <AddImageButton post={post} content={content} styles={css.button} />
-        <Button
-          size='sm'
-          aria-label='add ordered list'
-          className={css.button}
-        >
-          <Icon icon='mdi:format-list-bulleted' />
-        </Button>
-        <Button
-          size='sm'
-          aria-label='add unordered list'
-          className={css.button}
-        >
-          <Icon icon='mdi:format-list-numbered' />
-        </Button>
-        <Button
-          size='sm'
-          aria-label='add message'
-          className={css.button}
-        >
-          <Icon icon='ant-design:message-filled' />
-        </Button>
-        <Button
-          size='sm'
-          aria-label='add quote'
-          className={css.button}
-        >
-          <Icon icon='mdi:format-quote-open' />
-        </Button>
-        <Button
-          size='sm'
-          aria-label='add codeblock'
-          className={css.button}
-        >
-          <Icon icon='mdi:code' />
-        </Button>
-        <Button
-          size='sm'
-          aria-label='add youtube video'
-          className={css.button}
-        >
-          <Icon icon='mdi:youtube' />
-        </Button>
+        <AddListButton post={post} type='ORDERED' content={content} styles={css.button} />
+        <AddListButton post={post} type='UNORDERED' content={content} styles={css.button} />
+        <AddMessageButton post={post} content={content} styles={css.button} />
+        <AddQuoteButton post={post} content={content} styles={css.button} />
+        <AddCodeButton post={post} content={content} styles={css.button} />
+        <AddYoutubeButton post={post} content={content} styles={css.button} />
       </div>
     </>
   );

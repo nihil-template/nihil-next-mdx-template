@@ -1,44 +1,43 @@
 'use client';
 
-import React, {
-  useCallback, useMemo
-} from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { ClassNameValue, twJoin } from 'tailwind-merge';
-import { useQueryClient } from '@tanstack/react-query';
-import { Post } from '@prisma/client';
+import { useForm } from 'react-hook-form/dist/useForm';
 import { object, string } from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form/dist/useForm';
 import { SubmitHandler } from 'react-hook-form/dist/types';
-import { BlockItem, TextBlockItem } from '@/src/entities';
-import {
-  ApiResponse, Nihil, useUpdatePost
-} from '@/src/common';
+import { useQueryClient } from '@tanstack/react-query';
+import { Post } from '@prisma/client';
+import { BlockItem, ImageBlockItem } from '@/src/entities';
+import { ApiResponse, Nihil, useUpdatePost } from '@/src/common';
 import { ItemBottomButtons, ItemManageMenu } from '@/src/components';
 import {
-  Form, FormField, FormItem, FormLabel, Textarea
+  Form, FormField, FormItem, FormLabel, Input
 } from '@/src/shadcn';
 
 interface Props {
-  block: TextBlockItem;
+  block: ImageBlockItem;
   content: BlockItem[];
   styles?: ClassNameValue;
 }
 
 interface Inputs {
-  text: string;
+  link: string;
+  alt: string;
 }
 
-export function TextItem({ block, content, styles, }: Props) {
+export function ImageItem({ block, content, styles, }: Props) {
   const model = object({
-    text: string().required(),
+    link: string().required(),
+    alt: string().required(),
   });
 
   const form = useForm({
     mode: 'all',
     resolver: yupResolver(model),
     defaultValues: {
-      text: block.text,
+      link: block.link,
+      alt: block.alt,
     },
   });
 
@@ -52,14 +51,16 @@ export function TextItem({ block, content, styles, }: Props) {
 
   const restoreBlock = useCallback(
     () => {
-      form.setValue('text', originBlock.text);
+      form.setValue('link', originBlock.link);
+      form.setValue('alt', originBlock.alt);
     },
     [ originBlock, ]
   );
 
   const resetBlock = useCallback(
     () => {
-      form.setValue('text', '');
+      form.setValue('link', '');
+      form.setValue('alt', '');
     },
     []
   );
@@ -68,9 +69,10 @@ export function TextItem({ block, content, styles, }: Props) {
     (data) => {
       const findBlock = content.find(
         (item) => item.id === block.id
-      ) as TextBlockItem;
+      ) as ImageBlockItem;
 
-      findBlock.text = data.text;
+      findBlock.link = data.link;
+      findBlock.alt = data.alt;
 
       updatePost.mutate({
         content: Nihil.string(content),
@@ -85,7 +87,7 @@ export function TextItem({ block, content, styles, }: Props) {
         },
       });
     },
-    [ block, ]
+    []
   );
 
   const css = {
@@ -109,23 +111,29 @@ export function TextItem({ block, content, styles, }: Props) {
               control={form.control}
               render={({ field, }) => (
                 <FormItem>
-                  <FormLabel>문단 내용</FormLabel>
-                  <Textarea
-                    value={field.value}
-                    autoComplete='off'
-                    onChange={field.onChange}
-                  />
+                  <FormLabel />
+                  <Input type='text' value={field.value} onChange={field.onChange} />
                 </FormItem>
               )}
-              name='text'
+              name='link'
+            />
+            <FormField
+              control={form.control}
+              render={({ field, }) => (
+                <FormItem>
+                  <FormLabel />
+                  <Input type='text' value={field.value} onChange={field.onChange} />
+                </FormItem>
+              )}
+              name='alt'
             />
           </form>
-        </Form>
 
-        <ItemBottomButtons
-          restoreBlock={restoreBlock}
-          resetBlock={resetBlock}
-        />
+          <ItemBottomButtons
+            restoreBlock={restoreBlock}
+            resetBlock={resetBlock}
+          />
+        </Form>
       </div>
     </>
   );

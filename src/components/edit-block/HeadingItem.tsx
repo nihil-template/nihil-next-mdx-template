@@ -1,7 +1,7 @@
 'use client';
 
 import React, {
-  ChangeEvent, useCallback, useMemo, useState
+  useCallback, useMemo
 } from 'react';
 import { ClassNameValue, twJoin } from 'tailwind-merge';
 import { useQueryClient } from '@tanstack/react-query';
@@ -11,13 +11,12 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { BlockItem, HeadingBlockItem } from '@/src/entities';
 import {
-  ApiResponse, Nihil, useInput, useUpdatePost
+  ApiResponse, Nihil, useUpdatePost
 } from '@/src/common';
-import { ItemManageMenu } from '@/src/components';
+import { ItemBottomButtons, ItemManageMenu } from '@/src/components';
 import {
-  Button,
   Form, FormField, FormItem, FormLabel, Input,
-  Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue
+  Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue
 } from '@/src/shadcn';
 
 interface Props {
@@ -40,21 +39,15 @@ export function HeadingItem({ block, content, styles, }: Props) {
   const form = useForm({
     mode: 'all',
     resolver: yupResolver(model),
+    defaultValues: {
+      level: block.level,
+      text: block.text,
+    },
   });
 
   const originBlock = useMemo(() => {
     return block;
   }, []);
-
-  const level = useInput<HTMLSelectElement>({
-    id: 'level',
-    initValue: block.level,
-  });
-
-  const text = useInput<HTMLTextAreaElement>({
-    id: 'text',
-    initValue: block.text,
-  });
 
   const qc = useQueryClient();
 
@@ -62,16 +55,16 @@ export function HeadingItem({ block, content, styles, }: Props) {
 
   const restoreBlock = useCallback(
     () => {
-      text.setState(originBlock.text);
-      level.setState(originBlock.level);
+      form.setValue('text', originBlock.text);
+      form.setValue('level', originBlock.level);
     },
-    []
+    [ originBlock, ]
   );
 
   const resetBlock = useCallback(
     () => {
-      text.setState('');
-      level.setState('h2');
+      form.setValue('text', '');
+      form.setValue('level', 'h2');
     },
     []
   );
@@ -98,7 +91,7 @@ export function HeadingItem({ block, content, styles, }: Props) {
         },
       });
     },
-    [ block, text, level, ]
+    [ block, ]
   );
 
   const css = {
@@ -160,11 +153,11 @@ export function HeadingItem({ block, content, styles, }: Props) {
                 </FormItem>
               )}
             />
-            <div>
-              <button onClick={restoreBlock}>되돌리기</button>
-              <Button size='sm' type='submit'>저장</Button>
-              <button onClick={resetBlock}>비우기</button>
-            </div>
+
+            <ItemBottomButtons
+              restoreBlock={restoreBlock}
+              resetBlock={resetBlock}
+            />
           </form>
         </Form>
       </div>

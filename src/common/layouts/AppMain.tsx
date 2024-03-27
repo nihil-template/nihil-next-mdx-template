@@ -9,7 +9,7 @@ interface Props {
 export function AppMain({ styles, children, }: Props) {
   const style = {
     default: twJoin([
-      ``,
+      `w-full mo-sm:w-full mo-md:w-full mo-md:max-w-[900px] mo-lg:max-w-[900px]`,
       styles,
     ]),
   };

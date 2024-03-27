@@ -1,6 +1,6 @@
 import React from 'react';
 import { setMeta } from '@/src/common';
-import { PostList } from '@/src/components';
+import { Posts } from '@/src/components';
 
 interface Props {
   //
@@ -11,10 +11,10 @@ export const metadata = setMeta({
   url: '/posts',
 });
 
-export default function page() {
+export default function PostsPage() {
   return (
     <>
-      <PostList />
+      <Posts />
     </>
   );
 }

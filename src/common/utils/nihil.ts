@@ -34,6 +34,10 @@ export class Nihil {
     return dayjs(date || new Date()).tz('Asia/Seoul');
   }
 
+  static dateToFormat(date?: (string | number | Date)) {
+    return this.date(date).format('YYYY.M.D. HH:mm');
+  }
+
   static indexReplacer<T>(array: Array<T>, index1: number, index2: number) {
     const newArray = [ ...array, ];
 
